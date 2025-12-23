@@ -5,16 +5,15 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver import ActionChains
-import time
 
 
-def button_menu(drive):
+def click_button_menu(drive):
     button_menu = WebDriverWait(drive, 5).until(
         EC.element_to_be_clickable((By.XPATH, "//a[@title = 'CARDÁPIO']"))
     )
     button_menu.click()
 
-def button_datils(drive):
+def click_button_datils(drive):
     actions = ActionChains(drive)
     button_details = WebDriverWait(drive, 10).until(
         EC.presence_of_all_elements_located((By.XPATH, "//button[normalize-space()='+DETALHES']"))
@@ -31,24 +30,30 @@ def button_datils(drive):
         except Exception as error:
             print(f'Erro: {error}')
 
-def after_button(drive):
-    before = WebDriverWait(drive, 10).until(
-        EC.element_to_be_clickable((By.XPATH, "//a/span[normalize-space()='2']"))
-    )
+def click_after_button(drive):
 
-    before.click()
+    while True:
+        click_button_datils(drive)
+
+        after = WebDriverWait(drive, 10).until(
+        EC.element_to_be_clickable((By.CSS_SELECTOR, "a[aria-label='Próximo page']"))
+        )
+
+        if after:
+            after.click()
+        else:
+            break
 
 def main():
     drive = webdriver.Chrome()
     drive.get('https://www.dardanella.com.br/inicio')
     drive.maximize_window()
     
-    button_menu(drive)
+    click_button_menu(drive)
 
     time.sleep(2)
-    button_datils(drive)
 
-    after_button(drive)
+    click_after_button(drive)
 
     time.sleep(3)
     drive.quit()

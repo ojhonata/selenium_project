@@ -1,3 +1,4 @@
+from selenium.common.exceptions import TimeoutException
 import time
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium import webdriver
@@ -31,20 +32,60 @@ def click_button_datils(drive):
             print(f'Erro: {error}')
 
 def click_after_button(drive):
-
     while True:
-        click_button_datils(drive)
+        try:
+            click_button_datils(drive)
 
-        after = WebDriverWait(drive, 10).until(
-        EC.element_to_be_clickable((By.CSS_SELECTOR, "a[aria-label='Próximo page']"))
-        )
+            after = WebDriverWait(drive, 5).until(
+            EC.element_to_be_clickable((By.CSS_SELECTOR, "a[aria-label='Próximo page']"))
+            )
 
-        if after:
             after.click()
-        else:
+            time.sleep(1.5)
+
+        except TimeoutException:
             break
 
+def click_category(drive, names_category):
+    pratos = 'Pratos'
+    jump = False
+    try:
+        drive.execute_script("window.scrollTo(0, 0);")
+
+        for indice, category in enumerate(names_category):
+            if jump:
+                jump = False
+                continue
+
+            drive.execute_script("window.scrollTo(0, 0);")
+            categories = WebDriverWait(drive, 5).until(
+                EC.element_to_be_clickable((By.XPATH, f"//button[normalize-space()='{category}']"))
+            )
+
+            time.sleep(2)
+            categories.click()
+
+            if category == pratos:
+                next_index = indice + 1
+                if next_index < len(names_category):
+                    next_category = names_category[next_index]
+
+                    next = WebDriverWait(drive, 5).until(
+                        EC.element_to_be_clickable((By.XPATH, f"//button[normalize-space()='{next_category}']"))
+                    )
+                    next.click()
+                    jump = True
+            
+            click_after_button(drive)
+
+    except Exception as e:
+        print(e)
+
+    time.sleep(2)
+
 def main():
+    list_category = ['Bebidas', 'Calzones', 'Lanches', 'Petiscos', 'Pizzas', 'Pizzas Doces', 'Pratos', 'Saladas', 'Massas', 'Executivos', 'Prato', 'Peixes']
+
     drive = webdriver.Chrome()
     drive.get('https://www.dardanella.com.br/inicio')
     drive.maximize_window()
@@ -53,7 +94,7 @@ def main():
 
     time.sleep(2)
 
-    click_after_button(drive)
+    click_category(drive, list_category)
 
     time.sleep(3)
     drive.quit()

@@ -14,7 +14,7 @@ def click_button_menu(drive):
     )
     button_menu.click()
 
-def click_button_datils(drive):
+def click_button_details(drive):
     actions = ActionChains(drive)
     button_details = WebDriverWait(drive, 10).until(
         EC.presence_of_all_elements_located((By.XPATH, "//button[normalize-space()='+DETALHES']"))
@@ -25,23 +25,21 @@ def click_button_datils(drive):
             drive.execute_script('arguments[0].scrollIntoView(true);', button)
             drive.execute_script('arguments[0].click()', button)
 
-            time.sleep(2)
-
-            actions.send_keys(Keys.ESCAPE).perform()
+            actions.pause(2).send_keys(Keys.ESCAPE).perform()
         except Exception as error:
             print(f'Erro: {error}')
 
 def click_after_button(drive):
     while True:
         try:
-            click_button_datils(drive)
+            click_button_details(drive)
 
             after = WebDriverWait(drive, 5).until(
             EC.element_to_be_clickable((By.CSS_SELECTOR, "a[aria-label='Próximo page']"))
             )
 
             after.click()
-            time.sleep(1.5)
+            time.sleep(1.2)
 
         except TimeoutException:
             break
@@ -87,17 +85,20 @@ def main():
     list_category = ['Bebidas', 'Calzones', 'Lanches', 'Petiscos', 'Pizzas', 'Pizzas Doces', 'Pratos', 'Saladas', 'Massas', 'Executivos', 'Prato', 'Peixes']
 
     drive = webdriver.Chrome()
-    drive.get('https://www.dardanella.com.br/inicio')
-    drive.maximize_window()
-    
-    click_button_menu(drive)
+    try:        
+        drive.get('https://www.dardanella.com.br/inicio')
+        drive.maximize_window()
+        
+        click_button_menu(drive)
 
-    time.sleep(2)
+        click_category(drive, list_category)
 
-    click_category(drive, list_category)
-
-    time.sleep(3)
-    drive.quit()
+        time.sleep(3)
+    except Exception as a:
+        print(a)
+    finally:
+        print('Finalizando...')
+        drive.quit()
 
 
 if __name__ == '__main__':

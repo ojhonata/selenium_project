@@ -49,14 +49,14 @@ def click_after_button(drive):
 def click_category(drive, names_category):
     pratos = 'Pratos'
     jump = False
-    try:
-        drive.execute_script("window.scrollTo(0, 0);")
+    
+    drive.execute_script("window.scrollTo(0, 0);")
 
-        for indice, category in enumerate(names_category):
-            if jump:
-                jump = False
-                continue
-
+    for indice, category in enumerate(names_category):
+        if jump:
+            jump = False
+            continue
+        try:
             drive.execute_script("window.scrollTo(0, 0);")
             categories = WebDriverWait(drive, 5).until(
                 EC.element_to_be_clickable((By.XPATH, f"//button[normalize-space()='{category}']"))
@@ -75,11 +75,11 @@ def click_category(drive, names_category):
                     )
                     next.click()
                     jump = True
-            
+                
             click_after_button(drive)
 
-    except Exception as e:
-        print(e)
+        except Exception as e:
+            print(f'Erro ao processar a categoria {category} {e}')
 
     time.sleep(2)
 

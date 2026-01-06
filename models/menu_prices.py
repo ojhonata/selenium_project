@@ -11,10 +11,10 @@ class MenuPrice(ModelBase):
 
     id: Mapped[int] = mapped_column(sa.BigInteger, primary_key=True, autoincrement=True)
 
-    id_product: Mapped[int] = mapped_column(sa.Integer, sa.ForeignKey('products.id', ondelete='CASCADE'))
+    id_product: Mapped[int] = mapped_column(sa.BigInteger, sa.ForeignKey('products.id', ondelete='CASCADE'))
     product: Mapped['Product'] = orm.relationship('Product', lazy='joined')
 
-    id_variation: Mapped[int] = mapped_column(sa.Integer, sa.ForeignKey('variations.id', ondelete='CASCADE'))
+    id_variation: Mapped[int] = mapped_column(sa.BigInteger, sa.ForeignKey('variations.id', ondelete='CASCADE'))
     variation: Mapped['Variation'] = orm.relationship('Variation', lazy='joined')
 
     price: Mapped[float] = mapped_column(sa.Numeric(10, 2), nullable=True)

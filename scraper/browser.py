@@ -6,8 +6,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver import ActionChains
-from bs4 import BeautifulSoup
-
 
 def click_button_menu(drive):
     button_menu = WebDriverWait(drive, 5).until(
@@ -29,19 +27,26 @@ def click_button_details(drive):
             drive.execute_script("arguments[0].scrollIntoView(true);", button)
             drive.execute_script("arguments[0].click()", button)
 
+            time.sleep(1)
+
             html_page = drive.page_source
             list_page_html.append(html_page)
             
             actions.pause(2).send_keys(Keys.ESCAPE).perform()
         except Exception as error:
             print(f"Erro: {error}")
-    #return html_page
-
+    # html = list_page_html[0]
+    # with open('index.html', 'w', encoding='utf-8') as f:
+    #     f.write(html)
+    return list_page_html
 
 def click_after_button(drive):
+    list_all_category = []
+
     while True:
         try:
-            click_button_details(drive)
+            html_pages = click_button_details(drive)
+            list_all_category.extend(html_pages)
 
             after = WebDriverWait(drive, 5).until(
                 EC.element_to_be_clickable(
@@ -54,6 +59,7 @@ def click_after_button(drive):
 
         except TimeoutException:
             break
+    return list_all_category
 
 
 def click_category(drive, names_category):

@@ -1,16 +1,15 @@
 import os
-from typing import Optional
 
 import sqlalchemy as sa
 from dotenv import load_dotenv
 from sqlalchemy.future.engine import Engine
 from sqlalchemy.orm import Session, sessionmaker
 
-from models.model_base import ModelBase
+from selenium_project.models.model_base import ModelBase
 
 load_dotenv()
 
-__engine: Optional[Engine] = None
+__engine: Engine | None = None
 
 
 def create_engine() -> Engine:

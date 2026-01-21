@@ -1,11 +1,10 @@
 import sqlalchemy as sa
 import sqlalchemy.orm as orm
-from sqlalchemy.orm import mapped_column
-from sqlalchemy.orm.base import Mapped
-
 from models.model_base import ModelBase
 from models.product import Product
 from models.variation import Variation
+from sqlalchemy.orm import mapped_column
+from sqlalchemy.orm.base import Mapped
 
 
 class MenuPrice(ModelBase):

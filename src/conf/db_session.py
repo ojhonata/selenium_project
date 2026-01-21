@@ -19,7 +19,7 @@ def create_engine() -> Engine:
     if __engine:
         return __engine
 
-    conn_str = os.environ["database_url"]
+    conn_str = os.environ["DATABASE_URL"]
     __engine = sa.create_engine(url=conn_str, echo=False)
 
     return __engine

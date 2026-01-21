@@ -1,22 +1,59 @@
 [project]
-name = "selenium-project"
+name = "selenium_project"
 version = "0.1.0"
-description = "Add your description here"
+description = "Descrição do projeto"
 readme = "README.md"
+license = "MIT"
+authors = [{ name = "Jhonata Canevare" }]
 requires-python = ">=3.13"
-dependencies = [
-    "beautifulsoup4>=4.14.3",
-    "dotenv>=0.9.9",
-    "psycopg2-binary>=2.9.11",
-    "pyrefly>=0.46.0",
-    "selenium>=4.39.0",
-    "sqlalchemy>=2.0.45",
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["ruff", "pyright"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py313"
+fix = true
+show-fixes = true
+indent-width = 4
+exclude = ["venv", ".venv", "env", ".env", "node_modules", "__pycache__"]
+
+[tool.ruff.lint]
+select = [
+  "E", "W", "F",
+  "B", "I", "UP", "SIM", "C4",
+  "ANN", "RET", "S", "TRY",
+  "RUF", "N",
 ]
 
-[tool]
-
-[tool.pyrefly]
-project-includes = [
-    "**/*.py*",
-    "**/*.ipynb",
+ignore = [
+  "S101",    # uso de assert
+  "T201",    # print
+  "COM812",  # vírgula final
 ]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"
+
+[tool.pyright]
+typeCheckingMode = "strict"
+pythonVersion = "3.13"
+exclude = [
+  "**/venv",
+  "**/.venv",
+  "**/env",
+  "**/.env",
+  "**/node_modules",
+  "**/__pycache__",
+]
+venv = ".venv"
+venvPath = "."
+
+reportMissingTypeStubs = false
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"

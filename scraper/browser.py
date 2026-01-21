@@ -1,20 +1,24 @@
-from selenium.common.exceptions import TimeoutException
 import time
-from selenium.webdriver.support.wait import WebDriverWait
+
 from selenium import webdriver
+from selenium.common.exceptions import TimeoutException
+from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver import ActionChains
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.remote.webdriver import WebDriver
 
-def click_button_menu(drive):
+
+def click_button_menu(drive: WebDriver) -> None:
     button_menu = WebDriverWait(drive, 5).until(
         EC.element_to_be_clickable((By.XPATH, "//a[@title = 'CARDÁPIO']"))
     )
     button_menu.click()
 
-def click_button_details(drive):
-    list_page_html = []
+
+def click_button_details(drive: WebDriver) -> list[str]:
+    list_page_html: list[str] = []
     actions = ActionChains(drive)
     button_details = WebDriverWait(drive, 10).until(
         EC.presence_of_all_elements_located(
@@ -24,14 +28,14 @@ def click_button_details(drive):
 
     for button in button_details:
         try:
-            drive.execute_script("arguments[0].scrollIntoView(true);", button)
-            drive.execute_script("arguments[0].click()", button)
+            drive.execute_script("arguments[0].scrollIntoView(true);", button)  # type: ignore
+            drive.execute_script("arguments[0].click()", button)  # type: ignore
 
             time.sleep(1)
 
             html_page = drive.page_source
             list_page_html.append(html_page)
-            
+
             actions.pause(2).send_keys(Keys.ESCAPE).perform()
         except Exception as error:
             print(f"Erro: {error}")
@@ -40,8 +44,9 @@ def click_button_details(drive):
     #     f.write(html)
     return list_page_html
 
-def click_after_button(drive):
-    list_all_category = []
+
+def click_after_button(drive: WebDriver) -> list[str]:
+    list_all_category: list[str] = []
 
     while True:
         try:
@@ -62,18 +67,18 @@ def click_after_button(drive):
     return list_all_category
 
 
-def click_category(drive, names_category):
+def click_category(drive: WebDriver, names_category: list[str]) -> None:
     pratos = "Pratos"
     jump = False
 
-    drive.execute_script("window.scrollTo(0, 0);")
+    drive.execute_script("window.scrollTo(0, 0);")  # type: ignore
 
     for indice, category in enumerate(names_category):
         if jump:
             jump = False
             continue
         try:
-            drive.execute_script("window.scrollTo(0, 0);")
+            drive.execute_script("window.scrollTo(0, 0);")  # type: ignore
             categories = WebDriverWait(drive, 5).until(
                 EC.element_to_be_clickable(
                     (By.XPATH, f"//button[normalize-space()='{category}']")
@@ -104,7 +109,7 @@ def click_category(drive, names_category):
     time.sleep(2)
 
 
-def main():
+def main() -> None:
     list_category = [
         "Bebidas",
         "Calzones",
@@ -121,10 +126,10 @@ def main():
     ]
 
     drive = webdriver.Chrome()
-    try:        
-        drive.get('https://www.dardanella.com.br/inicio')
+    try:
+        drive.get("https://www.dardanella.com.br/inicio")
         drive.maximize_window()
-        
+
         click_button_menu(drive)
 
         click_category(drive, list_category)
@@ -133,7 +138,7 @@ def main():
     except Exception as a:
         print(a)
     finally:
-        print('Finalizando...')
+        print("Finalizando...")
         drive.quit()
 
 

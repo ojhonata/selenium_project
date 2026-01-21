@@ -1,5 +1,6 @@
-from bs4 import BeautifulSoup
 import re
+
+from bs4 import BeautifulSoup
 
 
 def extract_prices(html: str) -> list[dict]:
@@ -18,10 +19,7 @@ def extract_prices(html: str) -> list[dict]:
 
         price = _parse_price(price_text)
 
-        prices.append({
-            "size": size,
-            "price": price
-        })
+        prices.append({"size": size, "price": price})
 
     return prices
 
